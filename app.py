@@ -1,17 +1,14 @@
-from flask import Flask, render_template
-from flask_socketio import SocketIO
+from flask import Flask 
+from flask_socketio import SocketIO, send
 
 app = Flask(__name__)
-app.config["SECRET_KEY"] = "secret!"
-socketio = SocketIO(app)
+app.config['SECRET_KEY'] = 'mysecret'
+socketio = SocketIO(app, cors_allowed_origins='*')
 
-@socketio.on("message")
-def handle_message(data):
-    print(f"Received message: {data}")
+@socketio.on('message')
+def handle_message(message):
+	print('Message: ' + message)
+	send(message, broadcast=True)
 
-@socketio.on("json")
-def handle_json(json):
-    print(f"Received message: {json}")
-
-if __name__ == "__main__":
-    socketio.run(app)
+if __name__ == '__main__':
+	socketio.run(app)
