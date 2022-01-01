@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>ChatMe</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='auth.css') }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <div id="card">
+            <div id="card-content">
+               <div id="card-title">
+                   <h2>SIGN UP</h2>
+                   <div class="underline-title"></div>
+               </div> 
+               <form method="post" class="form">
+                   <label for="user-email" style="padding-top: 13px">&nbsp;Email</label>
+                   <input id="user-email" class="form-content" type="Email" name="Email" required>
+                   <div class="form-border"></div>
+
+                   <label for="user-username" style="padding-top: 13px">&nbsp;Username</label>
+                   <input id="user-username" class="form-content" type="Text" name="Text" required>
+                   <div class="form-border"></div>
+
+                   <label for="user-password" style="padding-top: 13px">&nbsp;Password</label>
+                   <input id="user-password" class="form-content" type="Password" name="Password" required>
+                   <div class="form-border"></div>
+               </form>
+               <input id="submit-btn" type="submit" name="submit" value="Create Account">
+            </div>
+        </div>
+    </body>
+</html>
