@@ -1,7 +1,9 @@
 from flask_socketio import SocketIO, send
+from flask_sqlalchemy import SQLAlchemy
 from flaskr.app import create_app
 
-app = create_app()
+db = SQLAlchemy()
+app = create_app(db)
 socketio = SocketIO(app, cors_allowed_origins='*')
 
 @socketio.on('message')
