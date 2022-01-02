@@ -12,5 +12,4 @@ def handle_message(message):
     send(message, broadcast=True)
 
 if __name__ == '__main__':
-    app.debug=True
     socketio.run(app, debug=True)

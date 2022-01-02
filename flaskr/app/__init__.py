@@ -16,4 +16,5 @@ def create_app(db: SQLAlchemy) -> Flask:
     app.register_blueprint(view, url_prefix="/")
     app.register_blueprint(api, url_prefix="/api/")
     
+    app.debug=True
     return app
