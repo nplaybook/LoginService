@@ -4,7 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 def create_app(db: SQLAlchemy) -> Flask:
     """Main caller to create Flask application"""
 
-    from .route import view, api
+    from .routes.views import view
+    from .routes.route import api
 
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'mysecret'
