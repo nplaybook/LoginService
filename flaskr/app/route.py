@@ -13,9 +13,9 @@ def index():
 def login():
     return render_template("login.html")
 
-@api.get("/signup")
+@view.get("/signup")
 def signup():
-    return "Signup"
+    return render_template("signup.html")
 
 @api.get("/logout")
 def logout():
