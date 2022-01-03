@@ -92,3 +92,26 @@ label {
     margin: -1.1rem auto 0 auto;
     width: 89px;
 }
+
+.alert {
+    padding: 10px;
+    background-color: #f44336;
+    border-radius: 8px;
+    color: white;
+    /* margin-bottom: 15px; */
+  }
+
+.closebtn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.closebtn:hover {
+    color: black;
+}
