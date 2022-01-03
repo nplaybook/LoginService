@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, render_template, flash, redirect, url_for
 from marshmallow import ValidationError
 
 from flaskr import db
@@ -15,30 +15,28 @@ api = Blueprint("api", __name__)
 @api.post("/user/login")
 def login():
     try:
-        request_data = UserLogin().load(request.json)
+        request_data = UserLogin().load(request.form)
         user_data = check_existing_user(email=request_data['email'])
         if user_data is None:
-            return generate_response(http_status=400, message="Email is not registered")
+            flash("User is not registered")
+            return redirect(url_for("views.login"))
         match_status = match_password(password=request_data["password"], salt=user_data.salt, hash=user_data.hash)
         if match_status == False:
             return generate_response(http_status=400, message="Wrong password") 
         token = issue_jwt(data=user_data, expired_minutes=60)
-        return jsonify(generate_response(
-            http_status=200, 
-            message="Login success", 
-            data=token
-        ))
+        response = generate_response(http_status=200, message="Login success", data={"token": token})
+        return render_template("chat.html", response=response)
     except ValidationError as val_err:
         response = generate_response(http_status=400, message=val_err.messages)
-        return jsonify(response)
+        return response
     except Exception as error:
         response = generate_response(http_status=500,message=error)
-        return jsonify(response)
+        return response
 
 @api.post("/user/signup")
 def signup():
     try:
-        request_data = UserRegister().load(request.json)
+        request_data = UserRegister().load(request.form)
         user_data = check_existing_user( email=request_data["email"])
         if user_data is not None: 
             return generate_response(http_status=400, message="Email is already registered")
@@ -51,14 +49,11 @@ def signup():
         )
         db.session.add(new_user)
         db.session.commit()
-        return jsonify(generate_response(
-            http_status=200, 
-            message="Successfully registered user", 
-            data=request_data 
-        ))
+        response = generate_response(http_status=200, message="Successfully registered user") 
+        return render_template("login.html", response=response)
     except ValidationError as val_err:
         response = generate_response(http_status=400, message=val_err.messages)
-        return jsonify(response)
+        return response
     except Exception as error:
         response = generate_response(http_status=500, message=error)
-        return jsonify(response)
+        return response
