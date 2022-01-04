@@ -89,9 +89,16 @@ label {
     width: 89px;
 } 
 
+.success {
+    background-color:#00471B;
+}
+
+.error {
+    background-color: #AC1A2F;
+}
+
 .alert {
     padding: 10px;
-    background-color: #AC1A2F;
     border-radius: 8px;
     color: #FFF;
     font-family: "Raleway Semibold", sans-serif;

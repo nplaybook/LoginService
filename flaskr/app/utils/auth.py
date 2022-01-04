@@ -5,9 +5,25 @@ from hashlib import pbkdf2_hmac
 from flask import current_app
 from flaskr.app.models.user import User
 
-def check_existing_user(email: str) -> bool: 
-    """Check existing user from input usename and email.
-    If user already exist will return False, otherwise True.
+def check_user_login(email: str) -> bool: 
+    """Check existing user login info from input usename and email.
+    If user already exist will return True, otherwise False.
+    
+    :param email: {str} input email from request body
+    
+    :return: {bool}
+    """
+
+    validation: bool = False
+
+    validate_email = User.query.filter_by(email=email).first()
+    validation = True if validate_email is None else False
+ 
+    return validation
+
+def check_user_signup(email: str, username: str) -> bool: 
+    """Check existing user signup info from input usename and email.
+    If user already exist will return True, otherwise False.
     
     :param username: {str} input username from request body
     :param email: {str} input email from request body
@@ -15,6 +31,25 @@ def check_existing_user(email: str) -> bool:
     :return: {bool}
     """
 
+    validation: bool = True
+    
+    validate_username = User.query.filter_by(username=username).first()
+    validation = True if validate_username is not None else False
+    if validation: return validation
+    
+
+    validate_email = User.query.filter_by(email=email).first()
+    validation = True if validate_email is not None else False
+ 
+    return validation
+
+def get_user_data(email: str) -> dict:
+    """Query user data by corresponding email.
+    
+    :param email: {str} from input form
+    :return: {dict}
+    """
+    
     user_data = User.query.filter_by(email=email).first()
     return user_data
 
