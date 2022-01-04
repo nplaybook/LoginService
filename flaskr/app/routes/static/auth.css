@@ -3,7 +3,7 @@ a {
 }
 
 body {
-    background: -webkit-linear-gradient(bottom, #3498db, #9b59b6);
+    background: #EEE1C6;
     background-repeat: no-repeat;
 }
 
@@ -12,21 +12,17 @@ label {
    font-size: 11pt;  
 }
 
-#forgot-pass {
-    color: #16a085;
-    font-family: "Raleway", sans-serif;
-    font-size: 10pt;
-    margin-top: 3px;
-    text-align: right;
-}
-
 #card {
-    background: #fbfbfb;
+    background: #fff;
     border-radius: 8px;
     box-shadow: 1px 2px 8px rgba(0,0,0,0.65);
+    left: 50%;
+    top: 50%; 
     height: 410px;
-    margin: 6rem auto 8.1rem auto;
-    width: 329px;
+    width: 330px;
+    margin-top: -205px;
+    margin-left: -115px;
+    position: fixed;
 }
 
 #card-content {
@@ -50,11 +46,11 @@ label {
 }
 
 #submit-btn {
-    background: -webkit-linear-gradient(bottom, #3498db, #9b59b6);
+    background: #00471B;
     border-radius: 21px;
     border: none;
     cursor: pointer;
-    color:white;
+    color:#FFF;
     font-family: "Raleway Semibold", sans-serif;
     height: 42.3px;
     margin: 0 auto;
@@ -76,40 +72,47 @@ label {
 .form-border {
     height: 1px;
     width: 100%;
-    background: -webkit-linear-gradient(bottom, #3498db, #9b59b6);
+    background: #00471B;
 }
 
 .form-content {
-    background: #fbfbfb;
+    background: #fff;
     border: none;
     outline: none;
     padding-top: 14px;
 }
 
 .underline-title {
-    background: -webkit-linear-gradient(bottom, #3498db, #9b59b6);
+    background: #00471B;
     height: 2px;
     margin: -1.1rem auto 0 auto;
     width: 89px;
-}
+} 
 
 .alert {
     padding: 10px;
-    background-color: #f44336;
+    background-color: #AC1A2F;
     border-radius: 8px;
-    color: white;
-    /* margin-bottom: 15px; */
+    color: #FFF;
+    font-family: "Raleway Semibold", sans-serif;
+    text-align: center;
+    position: fixed;
+    width: 310px;
+    margin-left: -115px;
+    left: 50%;
+    top: 10%;
+    transition: 0.2s;
   }
 
 .closebtn {
     margin-left: 15px;
-    color: white;
+    color: #FFF;
     font-weight: bold;
     float: right;
-    font-size: 22px;
+    font-size: 10pt;
     line-height: 20px;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.2s;
 }
 
 .closebtn:hover {
