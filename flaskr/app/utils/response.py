@@ -13,14 +13,9 @@ def generate_response(http_status: int, message: str, data: dict=None) -> dict:
 
     dict_result = {
         "message": message,
-        "status": http_status,
         "data": {}
     }
 
-    if str(http_status)[0] == "2":
-        dict_result["success"] = True
-        dict_result["data"] = data
-    else:
-        dict_result["success"] = False
-    
+    dict_result["success"] = True if str(http_status)[0] == "2" else False
+    if data: dict_result["data"] = data
     return dict_result
