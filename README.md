@@ -1,3 +1,3 @@
-# ChatMe
+# LoginService
 
-This is a web app chat application created on top of Flask
+This is a general authentication service that can be used accross services
