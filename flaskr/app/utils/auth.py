@@ -20,13 +20,13 @@ def check_existing_user(email: str, username: str=None):
     """
 
     validation: bool = True
-    
+
     validate_email = User.query.filter_by(email=email).first()
-    validation = True if validate_email is not None else False
-    
+    validation = validate_email is not None
+
     if username:
         validate_username = User.query.filter_by(username=username).first()
-        validation = True if validate_username is not None else False
+        validation = validate_username is not None
 
     return validation
 
@@ -38,8 +38,7 @@ def get_user_data(email: str) -> dict:
     :return: {dict}
     """
     
-    user_data = User.query.filter_by(email=email).first()
-    return user_data
+    return User.query.filter_by(email=email).first()
 
 
 def mask_password(password: str) -> tuple:
@@ -79,7 +78,7 @@ def match_password(password: str, salt: str, hash: str) -> bool:
         iterations=100_000
     )
 
-    return True if generated_hash == hash else False
+    return generated_hash == hash
 
 
 def issue_jwt(data: dict, expired_minutes: int) -> dict:
@@ -92,12 +91,11 @@ def issue_jwt(data: dict, expired_minutes: int) -> dict:
     :return: {dict}
     """
 
-    token = jwt.encode({
+    return jwt.encode({
         "username": data.username,
         "email": data.email,
         "exp": datetime.utcnow() + timedelta(minutes=expired_minutes)
     }, key=current_app.config["SECRET_KEY"])
-    return token
 
 
 def token_required(func):
