@@ -6,7 +6,7 @@ from app.models.user import User
 from app.utils.validator import UserRegister, UserLogin, UserResetPassword
 from app.utils.auth import (
     check_existing_user, mask_password, match_password, 
-    issue_jwt, get_user_data, token_required
+    issue_jwt, get_user_data, token_required, validate_password_req
 )
 from app.utils.response import generate_response
 
@@ -21,7 +21,7 @@ def login():
         # CASE: USER NOT IN THE DATABASE
         if not is_exist:
             return jsonify(generate_response(http_status=404, message="User not found")), 404
-        user_data: dict = get_user_data(email=request_data["email"])
+        user_data: User = get_user_data(email=request_data["email"])
         is_password_match: bool = match_password(password=request_data["password"], salt=user_data.salt, hash=user_data.hash)
         # CASE: WRONG PASSWORD
         if not is_password_match:
@@ -42,8 +42,11 @@ def signup():
         is_exist: bool = check_existing_user(email=request_data["email"], username=request_data["username"])
         if is_exist:
             return jsonify(generate_response(http_status=404, message="Email/Username already registered")), 404
+        is_password_validated: bool = validate_password_req(password=request_data["password"])
+        if not is_password_validated:
+            return jsonify(generate_response(http_status=404, message="Password at least contain lowercase, uppercase, symbol, and number")), 404
         salt, hash = mask_password(password=request_data["password"])
-        new_user = User(
+        new_user: User = User(
             email=request_data["email"],
             username=request_data["username"],
             salt=salt,
