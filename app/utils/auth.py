@@ -6,8 +6,8 @@ from functools import wraps
 import jwt
 from flask import current_app, request, session, jsonify
 
-from flaskr.app.models.user import User
-from flaskr.app.utils.response import generate_response
+from app.models.user import User
+from app.utils.response import generate_response
 
 
 def check_existing_user(email: str, username: str=None):

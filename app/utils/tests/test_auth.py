@@ -1,5 +1,5 @@
 import unittest
-from flaskr.app.utils import auth
+from app.app.utils import auth
 
 class TestCheckExistingUser(unittest.TestCase):
 
