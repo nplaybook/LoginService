@@ -6,38 +6,44 @@ from app.models.user import User
 class TestCheckExistingUser:
 
 
-    def test_existing_user_with_email_only(self, server):
+    @pytest.mark.parametrize("email, output", [
+        ("abc@google.com", True)
+    ])
+    def test_existing_user_email_only(self, server, email, output):
         with server.app_context():
-            exist_email: str = "abc@google.com"
-            not_exist_email: str = "xyz@google.com"
             
-            valid_email = auth.check_existing_user(email=exist_email)
-            not_valid_email = auth.check_existing_user(email=not_exist_email)
-            
-            # HAPPY CASE
-            assert valid_email == True
-            # FAIL CASE
-            assert not_valid_email == False
-            
+            result = auth.check_existing_user(email)
+            assert result == output
 
-    def test_existing_user_with_email_and_username(self, server):
+    @pytest.mark.parametrize("email, output", [
+        ("xyz@google.com",  False),
+        ("", False)
+    ])
+    def test_non_existing_user_email_only(self, server, email, output):
         with server.app_context():
-            exist_email: str = "abc@google.com"
-            exist_username: str = "abc"
-            not_exist_email: str = "xyz@google.com"
-            not_exist_username: str = "xyz"
+            result = auth.check_existing_user(email)
+            assert result == output
 
-            valid_email_valid_username = auth.check_existing_user(email=exist_email, username=exist_username)
-            valid_email_not_valid_username =auth.check_existing_user(email=exist_email, username=not_exist_username)
-            not_valid_email_valid_username =auth.check_existing_user(email=not_exist_email, username=exist_username)
-            not_valid_email_not_valid_username =auth.check_existing_user(email=not_exist_email, username=not_exist_username)
-            
-            # HAPPY CASE
-            assert valid_email_valid_username == True
-            # FAIL CASE
-            assert valid_email_not_valid_username == False
-            assert not_valid_email_valid_username == False
-            assert not_valid_email_not_valid_username == False
+    @pytest.mark.parametrize("email, username, output", [
+        ("abc@google.com", "abc", True)
+    ])
+    def test_existing_user_with_email_and_username(self, server, email, username, output):
+        with server.app_context():
+            result = auth.check_existing_user(email, username)
+            assert result == output
+
+    @pytest.mark.parametrize("email, username, output", [
+        ("xyz@google.com", "xyz", False),  # not valid email - not valid username
+        ("abc@google.com", "xyz", False),  # valid email - not valid username 
+        ("xyz@google.com", "abc", False),  # not valid email - valid username
+        ("xyz@google.com", "", False),  # not valid email - empty username
+        ("", "abc", False),  # empty email - valid username
+    ])
+    def test_non_existing_user_with_email_and_username(self, server, email, username, output):
+        with server.app_context():
+            result = auth.check_existing_user(email, username)
+            assert result == output
+
 
 class TestGetUserData:
 
@@ -53,10 +59,36 @@ class TestGetUserData:
             assert hasattr(user_data, "salt") == True
             assert hasattr(user_data, "hash") == True
 
-    def test_get_not_exist_user_data(self, server):
+    @pytest.mark.parametrize("email, output", [
+        ("xyz@google.com", None),
+        ("", None)
+    ])
+    def test_get_not_exist_user_data(self, server, email, output):
         with server.app_context():
-            email: str = "xyz@google.com"
-            user_data = auth.get_user_data(email=email)
-            
-            assert user_data is None
+            user_data = auth.get_user_data(email)
+            assert user_data == output
+
+
+class TestValidatePasswordReq:
+
+
+    @pytest.mark.parametrize("password, output", [
+        ("Test123!", True),
+        ("qweRty001_", True)
+    ])
+    def test_password_fulfil_requirement(self, password, output):
+        result = auth.validate_password_req(password)
+        assert result == output
+
+    @pytest.mark.parametrize("password, output", [
+        ("test", False),  # only lowercase
+        ("tesT", False),  # with lowercase and uppercase
+        ("tesT1", False),  # with lowercase, uppercase, and number
+        ("tesT_", False),  # with lowercase, uppercase, and special character
+        ("TEST1_", False),  # with uppercase, number, and special character
+        ("", False)  # empty string
+    ])
+    def test_password_notfulfil_requirement(self, password, output):
+        result = auth.validate_password_req(password)
+        assert  result == output
 
