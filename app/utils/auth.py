@@ -23,6 +23,7 @@ def check_existing_user(email: str, username: str=None):
 
     validate_email = User.query.filter_by(email=email).first()
     validation = validate_email is not None
+    if not validation: return validation
 
     if username:
         validate_username = User.query.filter_by(username=username).first()
@@ -31,7 +32,7 @@ def check_existing_user(email: str, username: str=None):
     return validation
 
 
-def get_user_data(email: str) -> dict:
+def get_user_data(email: str) -> User:
     """Query user data by corresponding email.
     
     :param email: {str} from input form
