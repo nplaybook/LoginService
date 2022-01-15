@@ -1,4 +1,5 @@
 import os
+import re
 from datetime import datetime, timedelta
 from hashlib import pbkdf2_hmac
 from functools import wraps
@@ -10,7 +11,7 @@ from app.models.user import User
 from app.utils.response import generate_response
 
 
-def check_existing_user(email: str, username: str=None):
+def check_existing_user(email: str, username: str=None) -> bool:
     """Check existing user info from input email and usename (optional).
     If user already exist will return True, otherwise False.
     
@@ -41,6 +42,27 @@ def get_user_data(email: str) -> User:
     
     return User.query.filter_by(email=email).first()
 
+
+def validate_password_req(password: str) -> bool:
+    """Check if the password contain at least 1 each of these
+    requirement: lower case, upper case, special character, number.
+
+    :param password: {str} plain text password in request body
+    :return: {bool} return True if input password certain criteria
+    otherwise return False
+    """
+
+    lower_case = re.compile("[a-z]")
+    upper_case = re.compile("[A-Z]")
+    special_char = re.compile('[@_!#$%^&*()<>?/\\|}{~:]')
+    digit = re.compile('\\d+')
+
+    return bool(
+        lower_case.search(password)
+        and upper_case.search(password)
+        and special_char.search(password)
+        and digit.search(password)
+    )
 
 def mask_password(password: str) -> tuple:
     """Mask password to database as salt and hash.
@@ -82,10 +104,10 @@ def match_password(password: str, salt: str, hash: str) -> bool:
     return generated_hash == hash
 
 
-def issue_jwt(data: dict, expired_minutes: int) -> dict:
+def issue_jwt(data: User, expired_minutes: int) -> dict:
     """Create JWT for authentication purpose.
     
-    :param data: {dict} input data from request body
+    :param data: {User} from database query
     :param expired_minutes: {int} jwt expired date after n-minutes
     the token is created
 
