@@ -10,27 +10,23 @@ class TestCheckExistingUser:
         ("abc@google.com", True)
     ])
     def test_existing_user_email_only(self, server, email, output):
-        with server.app_context():
-            
-            result = auth.check_existing_user(email)
-            assert result == output
+        result = auth.check_existing_user(email)
+        assert result == output
 
     @pytest.mark.parametrize("email, output", [
         ("xyz@google.com",  False),
         ("", False)
     ])
     def test_non_existing_user_email_only(self, server, email, output):
-        with server.app_context():
-            result = auth.check_existing_user(email)
-            assert result == output
+        result = auth.check_existing_user(email)
+        assert result == output
 
     @pytest.mark.parametrize("email, username, output", [
         ("abc@google.com", "abc", True)
     ])
     def test_existing_user_with_email_and_username(self, server, email, username, output):
-        with server.app_context():
-            result = auth.check_existing_user(email, username)
-            assert result == output
+        result = auth.check_existing_user(email, username)
+        assert result == output
 
     @pytest.mark.parametrize("email, username, output", [
         ("xyz@google.com", "xyz", False),  # not valid email - not valid username
@@ -40,33 +36,30 @@ class TestCheckExistingUser:
         ("", "abc", False),  # empty email - valid username
     ])
     def test_non_existing_user_with_email_and_username(self, server, email, username, output):
-        with server.app_context():
-            result = auth.check_existing_user(email, username)
-            assert result == output
+        result = auth.check_existing_user(email, username)
+        assert result == output
 
 
 class TestGetUserData:
 
 
     def test_get_exist_user_data(self, server):
-        with server.app_context():
-            email: str = "abc@google.com"
-            user_data = auth.get_user_data(email=email)
+        email: str = "abc@google.com"
+        user_data = auth.get_user_data(email=email)
 
-            assert type(user_data) == User
-            assert hasattr(user_data, "email") == True
-            assert hasattr(user_data, "username") == True
-            assert hasattr(user_data, "salt") == True
-            assert hasattr(user_data, "hash") == True
+        assert type(user_data) == User
+        assert hasattr(user_data, "email") == True
+        assert hasattr(user_data, "username") == True
+        assert hasattr(user_data, "salt") == True
+        assert hasattr(user_data, "hash") == True
 
     @pytest.mark.parametrize("email, output", [
         ("xyz@google.com", None),
         ("", None)
     ])
     def test_get_not_exist_user_data(self, server, email, output):
-        with server.app_context():
-            user_data = auth.get_user_data(email)
-            assert user_data == output
+        user_data = auth.get_user_data(email)
+        assert user_data == output
 
 
 class TestValidatePasswordReq:
