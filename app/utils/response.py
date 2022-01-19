@@ -12,10 +12,10 @@ def generate_response(http_status: int, message: str, data: dict=None) -> dict:
     """
 
     dict_result = {
-        "message": message,
-        "data": {}
+        'message': message,
+        'data': {},
+        'success': str(http_status)[0] == "2",
     }
 
-    dict_result["success"] = True if str(http_status)[0] == "2" else False
     if data: dict_result["data"] = data
     return dict_result
