@@ -16,7 +16,7 @@ api = Blueprint("api", __name__, url_prefix="/api/auth/")
 @api.post("/login")
 def login():
     try:
-        request_data: dict = UserLogin().load(request.form)
+        request_data: dict = UserLogin().load(request.json)
         is_exist: bool = check_existing_user(email=request_data['email'])
         # CASE: USER NOT IN THE DATABASE
         if not is_exist:
@@ -38,9 +38,9 @@ def login():
 @api.post("/signup")
 def signup():
     try:
-        request_data: dict = UserRegister().load(request.form)
+        request_data: dict = UserRegister().load(request.json)
         is_exist: bool = check_existing_user(email=request_data["email"], username=request_data["username"])
-        if is_exist:
+        if not is_exist:
             return jsonify(generate_response(http_status=404, message="Email/Username already registered")), 404
         is_password_validated: bool = validate_password_req(password=request_data["password"])
         if not is_password_validated:
@@ -76,7 +76,7 @@ def logout(user):
 def reset():
     # TODO: IMPROVE SECURITY BY SENDING EMAIL USING FLASK-MAIL
     try:
-        request_data: dict = UserResetPassword().load(request.form)
+        request_data: dict = UserResetPassword().load(request.json)
         is_exist: bool = check_existing_user(email=request_data["email"], username=request_data["username"])
         # CASE: VALIDATE INPUT EMAIL AND USERNAME
         if not is_exist:
